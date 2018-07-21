@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "mongoose": "^5.2.4",
     "telebot": "^1.2.6"
   }
 }
