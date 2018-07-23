@@ -3,7 +3,7 @@ const axios = require('axios');
 const bot = new TeleBot('339371115:AAEOSgOwRGXgndDMs1LF4VtjZF86vuNU0s8');
 
 var onStart = function (msg){
-    axios.post(`http://localhost:3000/graphql`,
+    axios.post(`http://logistics-api.eu-4.evennode.com/graphql`,
         {
             query: `{member(id:`+ msg.from.id +`){id}}`
         }).then(response => {
