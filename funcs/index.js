@@ -2,6 +2,12 @@ const TeleBot = require('telebot');
 const axios = require('axios');
 const bot = new TeleBot('339371115:AAEOSgOwRGXgndDMs1LF4VtjZF86vuNU0s8');
 
+var normalize = function (txt)
+{
+    txt = txt.replace(/\s/g, '');
+    return txt.toUpperCase()
+}
+
 var onStart = function (msg){
     axios.post(`http://logistics-api.eu-4.evennode.com/graphql`,
         {
@@ -10,7 +16,7 @@ var onStart = function (msg){
             if(response.data.data.member.length == 1)
             {
                 let replyMarkup = bot.keyboard([
-                    ['Trailer']
+                    ['Check Trailer']
                 ], {resize: true});
                 return bot.sendMessage(msg.from.id, "Welcome! " + msg.from.first_name + " " + msg.from.last_name, {replyMarkup});
             }
@@ -22,3 +28,4 @@ var onStart = function (msg){
 }
 
 module.exports.onStart = onStart;
+module.exports.normalize = normalize;
