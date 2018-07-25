@@ -27,13 +27,13 @@ var onStart = function (msg){
         })
 }
 
-var changeLoc = function (id, loc){
+var changeLoc = function (msg, loc){
     axios.post(`http://logistics-api.eu-4.evennode.com/graphql`,
     {
-        query: `mutation{ changeLoc(id:` + id + `,location: "` + loc + `"){ user { id } location } }`
+        query: `mutation{ changeLoc(id:` + msg.from.id + `,location: "` + loc + `"){ user { id } location } }`
     }).then(response => {
         console.log(response.data.data.changeLoc.user.id);
-        if(response.data.data.changeLoc.user.id == id)
+        if(response.data.data.changeLoc.user.id == msg.from.id)
         {
             return msg.reply.text("Location changed to " + loc);
         }

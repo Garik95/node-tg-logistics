@@ -6,7 +6,7 @@ bot.on('text', (msg) => {
     if(msg.text === "/start")
         func.onStart(msg);
     if(func.normalize(msg.text) === "CHECKTRAILER")
-        func.changeLoc(msg.from.id,"checktrailer");    
+        func.changeLoc(msg,"checktrailer");    
 });
  
 bot.start();
