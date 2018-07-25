@@ -32,8 +32,8 @@ var changeLoc = function (msg, loc){
     {
         query: `mutation{ changeLoc(id:` + msg.from.id + `,location: "` + loc + `"){ user { id } location } }`
     }).then(response => {
-        console.log(response.data.data.changeLoc);
-        if(response.data.data.changeLoc.user.id == msg.from.id)
+        console.log(response.data.data.changeLoc.user[0].id);
+        if(response.data.data.changeLoc.user[0].id == msg.from.id)
         {
             return msg.reply.text("Location changed to " + loc);
         }
