@@ -32,7 +32,12 @@ var changeLoc = function (id, loc){
     {
         query: `mutation{ changeLoc(id:` + id + `,location: "` + loc + `"){ user { id } location } }`
     }).then(response => {
-        console.log(response.data);
+        console.log(response.data.data.changeLoc.user.id);
+        if(response.data.data.changeLoc.user.id == id)
+        {
+            return msg.reply.text("Location changed to " + loc);
+        }
+        else return msg.reply.text("Cannot recognize your command!!!!!");
     })
     .catch(e => {console.log(e)})
 }
