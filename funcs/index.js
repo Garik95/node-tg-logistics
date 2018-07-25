@@ -27,5 +27,16 @@ var onStart = function (msg){
         })
 }
 
+var changeLoc = function (id, loc){
+    axios.post(`http://logistics-api.eu-4.evennode.com/graphql`,
+    {
+        query: `mutation{ changeLoc(id:` + id + `,location:` + loc + `){ user { id } location } }`
+    }).then(response => {
+        console.log(response);
+    })
+    .catch(e => {console.log(e)})
+}
+
 module.exports.onStart = onStart;
 module.exports.normalize = normalize;
+module.exports.changeLoc = changeLoc;
