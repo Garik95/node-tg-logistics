@@ -22,7 +22,13 @@ var onStart = function (msg){
                 return bot.sendMessage(msg.from.id, "Welcome! " + msg.from.first_name + " " + msg.from.last_name, {replyMarkup});
             }
             else
-                return msg.reply.text("Cannot recognize your command!!!!!");
+                axios.post(url,{
+                    query: `mutation { addMember(id:` + msg.from.id + `){ id } }`
+                }).then(response => {
+                    if(response.data.data.addMember.id === msg.from.id)
+                        return msg.reply.text("Succesfully registered. Your ID: " + msg.from.id);                    
+                }).catch(e => {console.log(e)})
+                // return msg.reply.text("Cannot recognize your command!!!!!");
         }).catch(e => {
             console.log(e);
         })
