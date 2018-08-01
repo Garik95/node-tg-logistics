@@ -60,13 +60,16 @@ var getTrailerState = function (msg){
         axios.get("https://api.us.spireon.com/api/assetStatus/" + id,{
             headers: {"Authorization":`Basic ${token}`}
         }).then(response => {
-            // console.log(JSON.stringify(response.data));
             if(response.data.success == true) {
                 var txt = "Address: " + response.data.data[0].address +
                 "\nCity: " + response.data.data[0].city +
                 "\nState: " + response.data.data[0].state +
                 "\nLong: " + response.data.data[0].lng +
-                "\nLat: " + response.data.data[0].lat
+                "\nLat: " + response.data.data[0].lat +
+                "\nMoving: " + response.data.data[0].moving +
+                "\nMoving Start Time: " + response.data.data[0].movingStartTime + 
+                "\nStopped: " + response.data.data[0].stopped +
+                "\nStopped Start Time: " + response.data.data[0].stoppedStartTime
                 ;
                 return msg.reply.text(txt);
             }else 
