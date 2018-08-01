@@ -2,7 +2,7 @@ const TeleBot = require('telebot');
 const axios = require('axios');
 const token = "YXppekBkbXd0cmFucy5jb206cGFzc3dvcmQ="
 const bot = new TeleBot('339371115:AAEOSgOwRGXgndDMs1LF4VtjZF86vuNU0s8');
-const url = `http://localhost:3000/graphql`;
+const url = `http://logistics-api.eu-4.evennode.com/graphql`;
 var normalize = function (txt)
 {
     txt = txt.replace(/\s/g, '');
