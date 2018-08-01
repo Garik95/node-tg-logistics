@@ -1,7 +1,8 @@
 const TeleBot = require('telebot');
 const axios = require('axios');
+const token = "YXppekBkbXd0cmFucy5jb206cGFzc3dvcmQ="
 const bot = new TeleBot('339371115:AAEOSgOwRGXgndDMs1LF4VtjZF86vuNU0s8');
-const url = `http://logistics-api.eu-4.evennode.com/graphql`;
+const url = `http://localhost:3000/graphql`;
 var normalize = function (txt)
 {
     txt = txt.replace(/\s/g, '');
@@ -53,38 +54,58 @@ var getUserState = function (msg,callback){
 var getTrailerState = function (msg){
     var text = normalize(msg.text);
     axios.post(url,{
-        query: `{trailer(id:"` + text + `"){state}}`
+        query: `{ trailermap(name:"` + text + `") { id } }`
     }).then(response => {
-        if(response.data.data.trailer.length == 1) {
-            var txt = "";
-            var replyMarkup;
-            switch(response.data.data.trailer[0].state){
-                case 'r': {
-                    txt = "Sorry trailer " + msg.text + " is reserved!";
-                    replyMarkup = bot.keyboard([
-                        ['Try Another Trailer']
-                    ], {resize: true});
-                } break;
-                case 'b':{
-                    txt = "Sorry trailer " + msg.text + " is blocked!";
-                    replyMarkup = bot.keyboard([
-                        ['Try Another Trailer']
-                    ], {resize: true});
-                } break;
-                case 'a':{
-                    txt = "Trailer " + msg.text + " is available!";
-                    replyMarkup = bot.keyboard([
-                        ['Reserve Trailer']
-                    ], {resize: true});
-                } break;
-                default: {
-                    txt = "There is something wrong!!!!!!"
-                }               
-            }
-            return bot.sendMessage(msg.from.id, txt , {replyMarkup});
-        }
-        else return msg.reply.text("Cannot recognize your command!!!!! or provided trailer number does not exists((((")
-    }).catch(e => {console.log(e)})
+        var id = response.data.data.trailermap[0].id;
+        axios.get("https://api.us.spireon.com/api/assetStatus/" + id,{
+            headers: {"Authorization":`Basic ${token}`}
+        }).then(response => {
+            // console.log(JSON.stringify(response.data));
+            if(response.data.success == true) {
+                var txt = "Address: " + response.data.data[0].address +
+                "\nCity: " + response.data.data[0].city +
+                "\nState: " + response.data.data[0].state +
+                "\nLong: " + response.data.data[0].lng +
+                "\nLat: " + response.data.data[0].lat
+                ;
+                return msg.reply.text(txt);
+            }else 
+            return msg.reply.text("Something wrong, try again");            
+        }).catch(e => {console.log(e)})
+    })
+    // axios.post(url,{
+    //     query: `{trailer(id:"` + text + `"){state}}`
+    // }).then(response => {
+    //     if(response.data.data.trailer.length == 1) {
+    //         var txt = "";
+    //         var replyMarkup;
+    //         switch(response.data.data.trailer[0].state){
+    //             case 'r': {
+    //                 txt = "Sorry trailer " + msg.text + " is reserved!";
+    //                 replyMarkup = bot.keyboard([
+    //                     ['Try Another Trailer']
+    //                 ], {resize: true});
+    //             } break;
+    //             case 'b':{
+    //                 txt = "Sorry trailer " + msg.text + " is blocked!";
+    //                 replyMarkup = bot.keyboard([
+    //                     ['Try Another Trailer']
+    //                 ], {resize: true});
+    //             } break;
+    //             case 'a':{
+    //                 txt = "Trailer " + msg.text + " is available!";
+    //                 replyMarkup = bot.keyboard([
+    //                     ['Reserve Trailer']
+    //                 ], {resize: true});
+    //             } break;
+    //             default: {
+    //                 txt = "There is something wrong!!!!!!"
+    //             }               
+    //         }
+    //         return bot.sendMessage(msg.from.id, txt , {replyMarkup});
+    //     }
+    //     else return msg.reply.text("Cannot recognize your command!!!!! or provided trailer number does not exists((((")
+    // }).catch(e => {console.log(e)})
 }
 
 module.exports.onStart = onStart;
